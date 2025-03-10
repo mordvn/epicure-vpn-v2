@@ -1,0 +1,14 @@
+[project]
+name = "epicure-vpn"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiogram>=3.18.0",
+    "marzban>=0.4.2",
+    "pydantic-settings>=2.8.1",
+    "python-dotenv>=1.0.1",
+    "var-dump>=1.2",
+    "yookassa>=3.5.0",
+]
