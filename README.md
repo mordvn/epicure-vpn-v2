@@ -6,7 +6,7 @@ Epicure VPN-Telegram-boot for managing the VPN subscriptions via Marzban API. Su
 
 - Регистрация пользователей
 - Проверка подписки
-- Прием платежей через Telegram Stars
+- Прием платежей через Yoomoney
 - Выдача ссылки на Xray-клиент через Marzban API
 - Поддержка локализаций
 
@@ -14,4 +14,4 @@ Epicure VPN-Telegram-boot for managing the VPN subscriptions via Marzban API. Su
 
 1. **Подготовьте `.env` файл** с настройками:
 
-   check app/config.py
+... please visit app/config.py

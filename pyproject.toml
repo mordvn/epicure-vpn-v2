@@ -6,7 +6,11 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "aiogram>=3.18.0",
+    "aiogram-dialog>=2.3.1",
+    "beanie>=1.29.0",
+    "loguru>=0.7.3",
     "marzban>=0.4.2",
+    "motor>=3.7.0",
     "pydantic-settings>=2.8.1",
     "python-dotenv>=1.0.1",
     "var-dump>=1.2",

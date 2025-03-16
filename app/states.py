@@ -1,7 +1,6 @@
-from aiogram.fsm.state import StatesGroup, State
-
-class PaymentState(StatesGroup):
+from aiogram.filters.state import StatesGroup, State
+class BotStates(StatesGroup):
+    subscription_view = State()
+    payment_view = State()
     in_payment_view = State()
-
-class SubscriptionState(StatesGroup):
-    in_subscription_view = State()
+    referral_system_view = State()

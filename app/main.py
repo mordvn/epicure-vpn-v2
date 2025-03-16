@@ -1,43 +1,36 @@
-import asyncio
-import logging
+from loguru import logger
 import sys
-from config import settings
-from aiogram import Bot, Dispatcher
-from aiogram.fsm.storage.memory import MemoryStorage
-
-from routers.include_routers import include_routers
+import asyncio
+from bot import dp, bot
 from services.include_services import include_services
+from routers.include_routers import include_routers
 
-logger = logging.getLogger(__name__)
+from config import settings
+logger.warning(f"DEBUG flag expected: {settings.DEBUG}")
 
 if settings.DEBUG:
-    logging.basicConfig(
-        level=logging.INFO,
-        stream=sys.stdout,
-        format='%(asctime)s - %(name)s - %(filename)s - %(levelname)s - %(message)s'
-    )
-else:
-    logging.basicConfig(
-        level=logging.WARNING,
-        stream=sys.stdout,
-        format='%(asctime)s - %(name)s - %(filename)s - %(levelname)s - %(message)s'
-    )
-
-
-
-bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
-storage = MemoryStorage()
-dp = Dispatcher(storage=storage)
+    logger.remove()
+    logger.add(sys.stdout, level="TRACE")
 
 async def main():
-    include_services(dp)
-    include_routers(dp)
+    try:
+        logger.debug("Including services...")
+        await include_services(dp)
+        logger.info("Services included")   
 
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+        logger.debug("Including routers...")
+        await include_routers(dp)
+        logger.info("Routers included")
+
+        logger.info("Starting polling...")
+        await dp.start_polling(bot)
+    except Exception as e:
+        logger.exception("An error occurred when starting the bot")
+        raise
 
 if __name__ == '__main__':
     try:
         asyncio.run(main())
-    except KeyboardInterrupt:
-        pass
+    except Exception as e:
+        logger.exception("An error occurred when running the bot")
+        raise

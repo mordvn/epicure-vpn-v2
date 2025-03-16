@@ -5,12 +5,19 @@ from yookassa.domain.common.confirmation_type import ConfirmationType
 from yookassa.domain.request.payment_request_builder import PaymentRequestBuilder
 from yookassa import Configuration
 from config import settings
-import var_dump as var_dump
-Configuration.configure(settings.YOO_KASSA_SHOP_ID, settings.YOO_KASSA_SECRET_KEY)
+from loguru import logger
 
-class Youkassa:
+class Yookassa:
     """https://github.com/yoomoney/yookassa-sdk-python/blob/master/docs/examples/02-payments.md
     https://yookassa.ru/docs/payment-solution/payments/testing-and-examples/testing"""
+    def __init__(self):
+        try:
+            Configuration.configure(settings.YOO_KASSA_SHOP_ID, settings.YOO_KASSA_SECRET_KEY)
+            logger.debug("Yookassa configured")
+        except Exception:
+            logger.exception("Yookassa configuration failed")
+            raise
+
     def create_payment(self, amount: int, order_number: str):
         builder = PaymentRequestBuilder()
         builder.set_amount({"value": amount, "currency": Currency.RUB}) \
@@ -21,7 +28,7 @@ class Youkassa:
         
         request = builder.build()
         res = Payment.create(request)
-
+        logger.debug(f"Payment created: {res.id}")
         return (res.id, res.confirmation.confirmation_url, res.amount.value)
 
     def get_payment(self, payment_id: str):
@@ -36,5 +43,11 @@ class Youkassa:
             }
         }
         res = Payment.capture(payment_id, params)
+        logger.debug(f"Payment captured: {res.id}")
+        return res
+    
+    def cancel_payment(self, payment_id: str):
+        res = Payment.cancel(payment_id)
+        logger.debug(f"Payment canceled: {res.id}")
         return res
         
