@@ -50,7 +50,7 @@ async def on_pay_referral(callback: CallbackQuery, button: Button, manager: Dial
 payment_window = Window(
         Const("❌ Подписка не активирована."),      
         Const("После оплаты бот отправит ссылку, которую добавляют в XRay клиент, после чего используют VPN."),      
-        Const("Подписка VLESS Германия 150 ГБ до 150 ГБ/сек"),      
+        Const(f"Подписка VLESS Германия 150 ГБ до 150 ГБ/сек за {settings.PAYMENT_SUBSCRIBTION_PRICE_RUB} рублей в месяц"),      
         Button(Const("Оплатить 1 месяц"), id="on_pay_1_month", on_click=on_pay_1_month),  
         Button(Const("Оплатить 3 месяца"), id="on_pay_3_months", on_click=on_pay_3_months),  
         Button(Const("Оплатить 6 месяцев"), id="on_pay_6_months", on_click=on_pay_6_months),  
