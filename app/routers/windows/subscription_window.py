@@ -1,3 +1,4 @@
+from re import S
 from aiogram_dialog import Window, DialogManager
 from aiogram_dialog.widgets.kbd import Button, Url
 from aiogram_dialog.widgets.text import Const, Format
@@ -17,9 +18,9 @@ async def use_effect(**kwargs):
     dialog_manager.dialog_data.update(vless_key=marz_user.links[0])
 
     return {
-        "subscription_end_date": datetime.fromtimestamp(marz_user.expire).strftime("%d.%m.%Y"),
-        "used_data_gb": marz_user.used_traffic / 1024 / 1024,
-        "subscription_data_limit_gb": marz_user.data_limit / 1024 / 1024,
+        "subscription_end_date": str(datetime.fromtimestamp(marz_user.expire).strftime("%d.%m.%Y")),
+        "used_data_gb": f"{marz_user.used_traffic / 1024 / 1024:.2f}",
+        "subscription_data_limit_gb": f"{marz_user.data_limit / 1024 / 1024:.2f}",
     }
 
 async def on_get_subscription(callback: CallbackQuery, button: Button, manager: DialogManager):
