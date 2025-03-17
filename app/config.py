@@ -14,13 +14,14 @@ class Settings(BaseSettings):
     SUBSCRIBTION_DATA_LIMIT_GB: int
     @property
     def SUBSCRIBTION_DATA_LIMIT_KB(self) -> int:
-        return self.SUBSCRIBTION_DATA_LIMIT_GB * 1024 * 1024
+        return self.SUBSCRIBTION_DATA_LIMIT_GB * 1024 * 1024 * 1024
     PAYMENT_SUBSCRIBTION_PRICE_RUB: int
     YOO_KASSA_SHOP_ID: str
     YOO_KASSA_SECRET_KEY: str
     YOO_KASSA_RETURN_URL: str
     MONGODB_URL: str
     REFERRAL_BONUS_RUB: int
+    REFERRAL_BONUS_PERCENT: int
     class Config:
         env_file = '.env'
 

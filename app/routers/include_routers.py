@@ -1,3 +1,4 @@
+from loguru import logger
 from aiogram import Dispatcher
 from aiogram_dialog import Dialog
 from routers.start import router as start_router

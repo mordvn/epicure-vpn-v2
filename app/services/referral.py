@@ -13,9 +13,7 @@ class ReferralSystem:
         self.database = self.client[database_name]
 
     async def init(self):
-        """Initialize database connection and Beanie models"""
         try:
-            # Initialize Beanie with the database
             await init_beanie(
                 database=self.database,
                 document_models=[Referral]
@@ -55,10 +53,6 @@ class ReferralSystem:
             return False
 
     async def get_referrer(self, user_id: int) -> Optional[int]:
-        """
-        Get the referrer ID for a user
-        Returns None if the user has no referrer
-        """
         try:
             referral = await Referral.find_one({"user_id": user_id})
             if referral:

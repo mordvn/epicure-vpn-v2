@@ -47,7 +47,7 @@ class Yookassa:
         return res
     
     def cancel_payment(self, payment_id: str):
-        res = Payment.cancel(payment_id)
-        logger.debug(f"Payment canceled: {res.id}")
-        return res
+        #res = Payment.cancel(payment_id)
+        logger.debug(f"Payment canceled: {payment_id}")
+        #return res
         

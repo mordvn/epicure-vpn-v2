@@ -12,9 +12,7 @@ class Balance:
         self.database = self.client[database_name]
         
     async def init(self):
-        """Initialize database connection and Beanie models"""
         try:
-            # Initialize Beanie with the database
             await init_beanie(
                 database=self.database,
                 document_models=[Transaction]
@@ -40,10 +38,6 @@ class Balance:
             return False
 
     async def register_expense(self, user_id: int, value: float, note: str) -> bool:
-        """
-        Register expense transaction
-        Returns True if transaction was registered successfully
-        """
         try:
             transaction = Transaction(
                 user_id=user_id,
@@ -59,16 +53,9 @@ class Balance:
             return False
 
     def get_currency(self) -> str:
-        """
-        Get current currency
-        """
         return self.currency
 
     async def get_history(self, user_id: int, limit: Optional[int] = None) -> List[Dict]:
-        """
-        Get transaction history for a specific user
-        Optional limit parameter to restrict number of transactions returned
-        """
         try:
             query = Transaction.find({"user_id": user_id}).sort(-Transaction.timestamp)
             if limit:
@@ -80,9 +67,6 @@ class Balance:
             return []
 
     async def get_balance(self, user_id: int) -> float:
-        """
-        Get balance by user ID
-        """
         try:
             transactions = await Transaction.find({"user_id": user_id}).to_list()
             balance = sum(t.value for t in transactions)
@@ -92,8 +76,5 @@ class Balance:
             return 0.0
 
     async def enough_balance(self, user_id: int, amount: float) -> bool:
-        """
-        Check if user has enough balance for a transaction
-        """
         balance = await self.get_balance(user_id)
         return balance >= amount

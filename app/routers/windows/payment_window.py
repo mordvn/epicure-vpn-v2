@@ -9,20 +9,23 @@ from services.yookassa import Yookassa
 from services.marzban import Marzban
 from config import settings
 import random
-from var_dump import var_dump
 from loguru import logger
-from routers.windows.in_payment_window import register_success_payment
+from routers.windows.in_payment_window import _register_success_payment
 from services.balance import Balance
+from services.referral import ReferralSystem
 
 async def on_pay(callback: CallbackQuery, button: Button, manager: DialogManager, months: int):
     user_telegram_id = manager.event.from_user.id
-    yookassa = manager.middleware_data.get("yookassa")
-    balance = manager.middleware_data.get("balance")
-    marzban = manager.middleware_data.get("marzban")
+    yookassa: Yookassa = manager.middleware_data.get("yookassa")
+    balance: Balance = manager.middleware_data.get("balance")
+    marzban: Marzban = manager.middleware_data.get("marzban")
+    referral: ReferralSystem = manager.middleware_data.get("referral")
+
     price = settings.PAYMENT_SUBSCRIBTION_PRICE_RUB * months
 
     if not await balance.enough_balance(user_telegram_id, price):
-        payment_id, payment_url, amount = yookassa.create_payment(price, f"{user_telegram_id}_{random.randint(1000,9999)}")
+        order_key = f"{user_telegram_id}_{random.randint(1000,9999)}"
+        payment_id, payment_url, amount = yookassa.create_payment(price, order_key)
         
         manager.dialog_data.update(payment_id=payment_id, payment_url=payment_url, amount=amount, months=months)
         await manager.switch_to(BotStates.in_payment_view)
@@ -32,9 +35,10 @@ async def on_pay(callback: CallbackQuery, button: Button, manager: DialogManager
             value=price, 
             note=f"Оплата {months} месяцев подписки"
         )
-        referrer = manager.middleware_data.get("referral")
-        referrer_id = await referrer.get_referrer(user_telegram_id)
-        await register_success_payment(manager, user_telegram_id, months, marzban, referrer_id, balance)
+
+        referrer_id = await referral.get_referrer(user_telegram_id)
+        await _register_success_payment(manager, user_telegram_id=user_telegram_id, months=months, marzban=marzban, referrer_id=referrer_id, balance=balance)
+
         await callback.message.answer(text=f"С внутреннего баланса списано {price} RUB")
         await manager.switch_to(BotStates.subscription_view)
 
